@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+    <head>
+        <title>International Space Station - document sharing</title>
+    </head>
+    <body>
+        {% if current_user.is_anonymous == False %}
+            You are logged in as {{ current_user.name }}. 
+            Your clearance level is {{ current_user.role }}
+        {% else %}
+            You are not logged in. Please log in to use this site.
+        {% endif %}
+        <hr>
+        <b>Navigation</b><br>
+        
+            {% if current_user.is_anonymous %}
+            <div>
+                <a href="/login">Login</a>
+            </div>
+            <div>
+                <a href="/register">Register</a>
+            </div>    
+            
+            {% else %}
+            <div>
+                <a href="/logout">Logout</a>
+            </div>
+            <div>
+                <a href="/index">Show Files</a>
+            </div>
+            <div>
+                <a href="/upload">Upload Files</a>
+            </div>
+            {% endif %}
+        <hr>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <b>Message(s):<br>
+                {% for message in messages %} 
+                    {{message}}<br>
+                {% endfor %}</b>
+            {% endif %}
+        {% endwith %}
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

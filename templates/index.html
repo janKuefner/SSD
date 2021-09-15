@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Show files</h1>
+    
+    {% if datas == [] %}
+    no files are uploaded yet. Please <a href="/upload">upload</a> something. 
+    {% endif %}
+
+    
+    {% for data in datas %}
+    <div>
+        <p>
+            Name:  {{ data.name }} <br>
+            Short Description of the file (optional) = {{data.short_description_of_file}} <br>
+            uploaded by: 
+            {% for user in users %}
+                {% if data.uploader == user.id %}
+                    {{ user.name }}
+                {% endif %}
+            {% endfor %}
+            <br>
+            Confidential = {{ data.confidential }} <br>
+            {% if 
+                data.confidential == True and current_user.role == '2' 
+                or 
+                data.confidential == True and current_user.role == '3' 
+                or
+                data.confidential == True and current_user.role == 'Admin'
+                or
+                data.confidential == True and current_user.id == data.uploader
+                or
+                data.confidential == False 
+            %}
+                <a href="download?id={{ data.id }}" download="{{ data.name }}">Download file</a> (to share the file right-click on the link and select copy link location)<br>
+                <a href="delete?del={{data.id}}">Delete this file</a><br>
+                <a href="metadata?id={{data.id}}">Update meta data</a>
+            {% else %}
+                Note: You need to have min. level 2 clearance or need to be the owner of this document to download, update or delete this file 
+            {% endif %}
+        </p>
+    </div>
+    {% endfor %}
+    
+    
+{% endblock %}
